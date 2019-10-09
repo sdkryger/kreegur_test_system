@@ -6,16 +6,12 @@
 	</head>
 	<body>
 		<div id="app">
-			{{message}}
+			
+			<input type="text" v-model="pubTopic">
+			<input type="text" v-model="pubPayload">
+			<button @click="publishMsg">Publish</button>
 		</div>
-		<script src="js/vue.js"></script>
-		<script>
-			var app = new Vue({
-				el: '#app',
-				data: {
-					message: 'Hello there!'
-				}
-			});
+		<script src="js/bundle.js">
 		</script>
 	</body>
 
