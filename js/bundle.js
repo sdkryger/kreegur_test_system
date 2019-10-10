@@ -287,9 +287,11 @@ var app = new _vue.default({
   },
 
   mounted() {
+    console.log("server ip address is: " + ipAddress);
+    if (ipAddress == '::1') ipAddress = 'localhost';
     console.log("vue mounted");
 
-    _vue.default.use(_vueMqtt.default, 'mqtt://' + 'localhost' + ':9001', {
+    _vue.default.use(_vueMqtt.default, 'mqtt://' + ipAddress + ':9001', {
       clientId: 'WebClient-' + parseInt(Math.random() * 100000)
     });
 

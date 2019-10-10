@@ -56,6 +56,9 @@
 			
 		</div>
 		<link rel="stylesheet" href="css/bootstrap.css">
+		<script>
+			var ipAddress = "<?php echo $_SERVER['SERVER_ADDR']; ?>";
+		</script>
 		<script src="js/bundle.js">
 		</script>
 	</body>

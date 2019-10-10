@@ -13,8 +13,11 @@ var app = new Vue({
 	numericData:[],		
     },
     mounted(){
+	console.log("server ip address is: "+ipAddress);
+	if(ipAddress == '::1')
+	    ipAddress = 'localhost';
         console.log("vue mounted");
-        Vue.use(VueMqtt, 'mqtt://'+'localhost'+':9001', {clientId: 'WebClient-' + parseInt(Math.random() * 100000)});
+        Vue.use(VueMqtt, 'mqtt://'+ipAddress+':9001', {clientId: 'WebClient-' + parseInt(Math.random() * 100000)});
         this.$mqtt.subscribe('#');
         this.$mqtt.on("message", function(topic, message) {
             self = this;
