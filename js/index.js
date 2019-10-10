@@ -1,15 +1,15 @@
 import Vue from 'vue/dist/vue.js';
 import VueMqtt from 'vue-mqtt';
 var $ = require("jquery");
+require('bootstrap');
 
 var app = new Vue({
 	el: '#app',
 	data: {
 		message: 'Hello there!',
-		mqtt:[],
-		pubTopic:'test/topic/1',
-		pubPayload:'something',
-		
+		pubTopic:'data/numeric/temperatureOuter',
+		pubPayload:'1.23',
+		numericData:[],		
 	},
 	mounted(){
         console.log("vue mounted");
@@ -18,24 +18,32 @@ var app = new Vue({
         this.$mqtt.on("message", function(topic, message) {
             self = this;
             console.log("topic:"+topic+", message:"+message);
-            var found = false;
-            $.each(self.mqtt,function(index,value){
-                //console.log("index:"+index+", topic: "+value.topic+", payload:"+value.payload);
-                if(value.topic == topic){
-                    console.log("found the topic: "+topic+" and will update it");
-                    found = true;
-                    self.mqtt[index].payload = message;
-                }
-            });
-            if(!found){
-                self.mqtt.push({topic:topic,payload:JSON.parse(message)});
-            }
+	    var topicArray = topic.split('/');
+	    console.log(JSON.stringify(topicArray));
+	    if(topicArray[0] == 'data' && topicArray[1] == 'numeric'){
+		var val = parseFloat(message);
+		var name = topicArray[2];
+		console.log("numeric:"+topicArray[2]+" has a value of "+val);
+		var found = false;
+		$.each(self.numericData, function(index,value){
+		    if(name == value.name){
+			found = true;
+			self.numericData[index].values.push(val);
+			self.numericData[index].timestamps.push(new Date());
+		    }
+		});
+		if(!found){
+		    var t = {name: name, values:[], timestamps:[]};
+		    t.values.push(val);
+		    t.timestamps.push(new Date());
+		    self.numericData.push(t);
+		}
+	    }
         }.bind(this));
 	console.log("mount success");
     },
     methods: {
 		publishMsg: function(){
-			alert("will publish");
 			this.$mqtt.publish(this.pubTopic,this.pubPayload);
 		}
 	}
