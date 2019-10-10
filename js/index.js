@@ -4,14 +4,15 @@ var $ = require("jquery");
 require('bootstrap');
 
 var app = new Vue({
-	el: '#app',
-	data: {
-		message: 'Hello there!',
-		pubTopic:'data/numeric/temperatureOuter',
-		pubPayload:'1.23',
-		numericData:[],		
-	},
-	mounted(){
+    el: '#app',
+    data: {
+	showManual: false,
+	showLatestValues: true,
+	pubTopic:'data/numeric/temperatureOuter',
+	pubPayload:'1.23',
+	numericData:[],		
+    },
+    mounted(){
         console.log("vue mounted");
         Vue.use(VueMqtt, 'mqtt://'+'localhost'+':9001', {clientId: 'WebClient-' + parseInt(Math.random() * 100000)});
         this.$mqtt.subscribe('#');
@@ -25,17 +26,22 @@ var app = new Vue({
 		var name = topicArray[2];
 		console.log("numeric:"+topicArray[2]+" has a value of "+val);
 		var found = false;
+		var updatedAt = new Date();
 		$.each(self.numericData, function(index,value){
 		    if(name == value.name){
 			found = true;
 			self.numericData[index].values.push(val);
-			self.numericData[index].timestamps.push(new Date());
+			self.numericData[index].timestamps.push(updatedAt);
+			self.numericData[index].latestValue = val;
+			self.numericData[index].lastUpdated = updatedAt;
 		    }
 		});
 		if(!found){
 		    var t = {name: name, values:[], timestamps:[]};
 		    t.values.push(val);
-		    t.timestamps.push(new Date());
+		    t.timestamps.push(updatedAt);
+		    t.latestValue = val;
+		    t.lastUpdated = updatedAt;
 		    self.numericData.push(t);
 		}
 	    }
@@ -43,8 +49,14 @@ var app = new Vue({
 	console.log("mount success");
     },
     methods: {
-		publishMsg: function(){
-			this.$mqtt.publish(this.pubTopic,this.pubPayload);
-		}
+	publishMsg: function(){
+	    this.$mqtt.publish(this.pubTopic,this.pubPayload);
+	},
+	toggleShowManual: function(){
+	    this.showManual = !this.showManual;
+	},
+	toggleShowLatestValues: function(){
+	    this.showLatestValues = !this.showLatestValues;
 	}
+    }
 });

@@ -279,7 +279,8 @@ require('bootstrap');
 var app = new _vue.default({
   el: '#app',
   data: {
-    message: 'Hello there!',
+    showManual: false,
+    showLatestValues: true,
     pubTopic: 'data/numeric/temperatureOuter',
     pubPayload: '1.23',
     numericData: []
@@ -304,11 +305,14 @@ var app = new _vue.default({
         var name = topicArray[2];
         console.log("numeric:" + topicArray[2] + " has a value of " + val);
         var found = false;
+        var updatedAt = new Date();
         $.each(self.numericData, function (index, value) {
           if (name == value.name) {
             found = true;
             self.numericData[index].values.push(val);
-            self.numericData[index].timestamps.push(new Date());
+            self.numericData[index].timestamps.push(updatedAt);
+            self.numericData[index].latestValue = val;
+            self.numericData[index].lastUpdated = updatedAt;
           }
         });
 
@@ -319,7 +323,9 @@ var app = new _vue.default({
             timestamps: []
           };
           t.values.push(val);
-          t.timestamps.push(new Date());
+          t.timestamps.push(updatedAt);
+          t.latestValue = val;
+          t.lastUpdated = updatedAt;
           self.numericData.push(t);
         }
       }
@@ -330,6 +336,12 @@ var app = new _vue.default({
   methods: {
     publishMsg: function () {
       this.$mqtt.publish(this.pubTopic, this.pubPayload);
+    },
+    toggleShowManual: function () {
+      this.showManual = !this.showManual;
+    },
+    toggleShowLatestValues: function () {
+      this.showLatestValues = !this.showLatestValues;
     }
   }
 });
