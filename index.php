@@ -16,7 +16,17 @@
 							<span class="badge badge-pill badge-danger" v-if="!logging">NOT logging to file</span>
 						</div>
 						<div class="card-body" v-if="showLogging">
+							<div class="form-group">
+								<label for="selectTrigger">Logging triggered by:</label>
+								<select class="form-control" v-model="trigger" id="selectTrigger">
+									<option v-for="num in numericData" :value="num.name">{{num.name}}</option>
+								</select>
+							</div>
 							<div class="row">
+								<div class="alert alert-warning" v-if="triggerError">
+									Must select a logging trigger to start logging. (If trigger select has no options, there is no current data. 
+									Data can be manually input in the 'Manual Input' section.
+								</div>
 								<button class="btn btn-primary" v-if="!logging" @click="startLogging">Start</button>
 								<button class="btn btn-primary" v-if="logging" @click="stopLogging">Stop</button>
 							</div>

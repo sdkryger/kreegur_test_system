@@ -3,7 +3,8 @@ import time
 import json
 
 state = {
-    "logging":False
+    "logging":False,
+    "trigger":''
 }
 
 # The callback for when the client receives a CONNACK response from the server.
@@ -18,10 +19,14 @@ def on_message(client, userdata, msg):
     global state
     #print(msg.topic+" "+str(msg.payload))
     if(msg.topic == 'processor/logging'):
-        print "Logging message received"
-        if(str(msg.payload)=='start'):
+        print "Logging message received: "+str(msg.payload)
+        message = json.loads(str(msg.payload))
+        print message
+        if(message["command"]=='start'):
             print "should start logging"
             state.update({"logging":True})
+            state.update({"trigger":message["trigger"]})
+            print state
         else:
             print "should stop logging"
             state.update({"logging":False})

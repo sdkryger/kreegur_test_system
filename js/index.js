@@ -14,7 +14,9 @@ var app = new Vue({
 	numericData:[],
 	logging: false,
 	lastProcessorUpdate: new Date(),
-	secondsSinceProcessorUpdate: 0,		
+	secondsSinceProcessorUpdate: 0,	
+	trigger:'',	
+	triggerError: false,
     },
     mounted(){
 	console.log("server ip address is: "+ipAddress);
@@ -75,10 +77,20 @@ var app = new Vue({
 	    this.showLogging= !this.showLogging;
 	},
 	startLogging: function(){
-	    this.$mqtt.publish("processor/logging","start");
+	    if(this.trigger == ''){
+		this.triggerError = true;
+	    }else{
+		this.triggerError = false;
+		var msg = {};
+		msg.command = 'start';
+		msg.trigger = this.trigger;
+		this.$mqtt.publish("processor/logging",JSON.stringify(msg));
+	    }
 	},
 	stopLogging: function(){
-	    this.$mqtt.publish("processor/logging","stop");
+	    var msg = {};
+	    msg.command = 'stop';
+	    this.$mqtt.publish("processor/logging",JSON.stringify(msg));
 	},
 	updateSecondsSinceProcessor: function(){
 	    this.secondsSinceProcessorUpdate = (new Date().getTime() - this.lastProcessorUpdate.getTime()) / 1000;
