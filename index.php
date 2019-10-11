@@ -9,6 +9,26 @@
 			<div class="row justify-content-center mt-2">
 				<div class="col-11">
 					<div class="card">
+						<div class="card-header" @click="toggleLogging">
+							<span v-if="showLogging" class="mr-3">-</span><span v-if="!showLogging" class="mr-3">+</span> Logging 
+							<span class="badge badge-pill badge-danger" v-if="secondsSinceProcessorUpdate > 2">Error - no comms</span>
+							<span class="badge badge-pill badge-success" v-if="logging">Logging to file</span>
+							<span class="badge badge-pill badge-danger" v-if="!logging">NOT logging to file</span>
+						</div>
+						<div class="card-body" v-if="showLogging">
+							<div class="row">
+								<button class="btn btn-primary" v-if="!logging" @click="startLogging">Start</button>
+								<button class="btn btn-primary" v-if="logging" @click="stopLogging">Stop</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			
+			<div class="row justify-content-center mt-2">
+				<div class="col-11">
+					<div class="card">
 						<div class="card-header" @click="toggleShowLatestValues">
 							<span v-if="showLatestValues" class="mr-3">-</span><span v-if="!showLatestValues" class="mr-3">+</span> Latest Values
 						</div>

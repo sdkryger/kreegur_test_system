@@ -8,9 +8,13 @@ var app = new Vue({
     data: {
 	showManual: false,
 	showLatestValues: true,
+	showLogging: true,
 	pubTopic:'data/numeric/temperatureOuter',
 	pubPayload:'1.23',
-	numericData:[],		
+	numericData:[],
+	logging: false,
+	lastProcessorUpdate: new Date(),
+	secondsSinceProcessorUpdate: 0,		
     },
     mounted(){
 	console.log("server ip address is: "+ipAddress);
@@ -47,8 +51,14 @@ var app = new Vue({
 		    t.lastUpdated = updatedAt;
 		    self.numericData.push(t);
 		}
+	    } else if (topicArray[0] == 'processor' && topicArray[1] == 'heartbeat'){
+		this.lastProcessorUpdate = new Date();
+		this.secondsSinceProcessorUpdate = 0;
+		var msg = JSON.parse(message); // message = {"logging":true/false}
+		this.logging = msg.logging;
 	    }
         }.bind(this));
+	setInterval(this.updateSecondsSinceProcessor,1000);
 	console.log("mount success");
     },
     methods: {
@@ -60,6 +70,18 @@ var app = new Vue({
 	},
 	toggleShowLatestValues: function(){
 	    this.showLatestValues = !this.showLatestValues;
+	},
+	toggleLogging: function(){
+	    this.showLogging= !this.showLogging;
+	},
+	startLogging: function(){
+	    this.$mqtt.publish("processor/logging","start");
+	},
+	stopLogging: function(){
+	    this.$mqtt.publish("processor/logging","stop");
+	},
+	updateSecondsSinceProcessor: function(){
+	    this.secondsSinceProcessorUpdate = (new Date().getTime() - this.lastProcessorUpdate.getTime()) / 1000;
 	}
     }
 });
