@@ -19,6 +19,7 @@ General data logging and viewing (numeric values) from any source.
 - Place files in Apache public docs folder (/var/www/html)
 
 ## Operation
+Start Python script `python/processor.py` to send processor heartbeat
 
 ### Data display and logging
 Publish data to the mqtt broker to display it and log it. 
