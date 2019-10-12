@@ -17,6 +17,7 @@ var app = new Vue({
 	secondsSinceProcessorUpdate: 0,	
 	trigger:'',	
 	triggerError: false,
+	logFileName: '',
     },
     mounted(){
 	console.log("server ip address is: "+ipAddress);
@@ -39,16 +40,16 @@ var app = new Vue({
 		$.each(self.numericData, function(index,value){
 		    if(name == value.name){
 			found = true;
-			self.numericData[index].values.push(val);
-			self.numericData[index].timestamps.push(updatedAt);
+			//self.numericData[index].values.push(val); // data for graph
+			//self.numericData[index].timestamps.push(updatedAt); //data for graph
 			self.numericData[index].latestValue = val;
 			self.numericData[index].lastUpdated = updatedAt;
 		    }
 		});
 		if(!found){
 		    var t = {name: name, values:[], timestamps:[]};
-		    t.values.push(val);
-		    t.timestamps.push(updatedAt);
+		    //t.values.push(val); //data for graph
+		    //t.timestamps.push(updatedAt); //data for graph
 		    t.latestValue = val;
 		    t.lastUpdated = updatedAt;
 		    self.numericData.push(t);
@@ -58,7 +59,10 @@ var app = new Vue({
 		this.secondsSinceProcessorUpdate = 0;
 		var msg = JSON.parse(message); // message = {"logging":true/false}
 		this.logging = msg.logging;
+	    } else if (topicArray[0] == 'processor' && topicArray[1] == 'loggingStart'){
+		self.logFileName = message;
 	    }
+		
         }.bind(this));
 	setInterval(this.updateSecondsSinceProcessor,1000);
 	console.log("mount success");

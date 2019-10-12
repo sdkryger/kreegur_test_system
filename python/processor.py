@@ -37,6 +37,7 @@ def on_message(client, userdata, msg):
             try:
                 logFile = open(filepath, "w")
                 print "success opening file"
+                client.publish('processor/loggingStart',filename)
             except:
                 print "file open error: " + sys.exc_info()[0]
             wr = csv.writer(logFile, dialect='excel')
@@ -61,13 +62,15 @@ def on_message(client, userdata, msg):
                 #print "did not find " + name + " in the list, will add"
                 numericNames.append(name)
                 numericValues.append(val)
-            print numericNames
-            print numericValues
+            #print numericNames
+            #print numericValues
             
             if(state["logging"] and state["trigger"] == name):
-                print "value has triggered logging"
+                #print "value has triggered logging"
                 #should log to file
                 wr.writerow(numericValues)
+        else:
+            print str(msg.payload)
                 
                 
                 

@@ -1,5 +1,9 @@
+<!doctype html>
 <html>
 	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
 		<title>
 			Kreegur
 		</title>
@@ -27,6 +31,9 @@
 									Must select a logging trigger to start logging. (If trigger select has no options, there is no current data. 
 									Data can be manually input in the 'Manual Input' section.
 								</div>
+								<div class="alert alert-success col-12" v-if="logging">
+									Logging to file: {{logFileName}}
+								</div>
 								<button class="btn btn-primary" v-if="!logging" @click="startLogging">Start</button>
 								<button class="btn btn-primary" v-if="logging" @click="stopLogging">Stop</button>
 							</div>
@@ -43,14 +50,14 @@
 							<span v-if="showLatestValues" class="mr-3">-</span><span v-if="!showLatestValues" class="mr-3">+</span> Latest Values
 						</div>
 						<div class="card-body" v-if="showLatestValues">
-							<div class="row" v-for="num in numericData">
-								<div class="col">
+							<div class="row border rounded mb-1" v-for="num in numericData">
+								<div class="col-12 col-sm-4">
 									{{num.name}}
 								</div>
-								<div class="col">
+								<div class="col-12 col-sm-4">
 									{{num.latestValue}}
 								</div>
-								<div class="col">
+								<div class="col-12 col-sm-4">
 									{{num.lastUpdated }}
 								</div>
 							</div>

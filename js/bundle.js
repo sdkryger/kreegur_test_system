@@ -289,7 +289,8 @@ var app = new _vue.default({
     lastProcessorUpdate: new Date(),
     secondsSinceProcessorUpdate: 0,
     trigger: '',
-    triggerError: false
+    triggerError: false,
+    logFileName: ''
   },
 
   mounted() {
@@ -316,9 +317,9 @@ var app = new _vue.default({
         var updatedAt = new Date();
         $.each(self.numericData, function (index, value) {
           if (name == value.name) {
-            found = true;
-            self.numericData[index].values.push(val);
-            self.numericData[index].timestamps.push(updatedAt);
+            found = true; //self.numericData[index].values.push(val); // data for graph
+            //self.numericData[index].timestamps.push(updatedAt); //data for graph
+
             self.numericData[index].latestValue = val;
             self.numericData[index].lastUpdated = updatedAt;
           }
@@ -329,9 +330,9 @@ var app = new _vue.default({
             name: name,
             values: [],
             timestamps: []
-          };
-          t.values.push(val);
-          t.timestamps.push(updatedAt);
+          }; //t.values.push(val); //data for graph
+          //t.timestamps.push(updatedAt); //data for graph
+
           t.latestValue = val;
           t.lastUpdated = updatedAt;
           self.numericData.push(t);
@@ -342,6 +343,8 @@ var app = new _vue.default({
         var msg = JSON.parse(message); // message = {"logging":true/false}
 
         this.logging = msg.logging;
+      } else if (topicArray[0] == 'processor' && topicArray[1] == 'loggingStart') {
+        self.logFileName = message;
       }
     }.bind(this));
     setInterval(this.updateSecondsSinceProcessor, 1000);
