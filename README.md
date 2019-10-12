@@ -19,7 +19,8 @@ General data logging and viewing (numeric values) from any source.
 - Place files in Apache public docs folder (/var/www/html)
 
 ## Operation
-Start Python script `python/processor.py` to send processor heartbeat
+- Start Python script `python/processor.py` to send processor heartbeat
+- OPTIONAL - Start Python script `python/simulatedData.py` to broadcast simulated data
 
 ### Data display and logging
 Publish data to the mqtt broker to display it and log it. 
@@ -30,6 +31,8 @@ The payload should be a numeric value such as `-15.5` or `12340`
 
 ### Logging (processor) module
 The logging module is meant to be implemented as a separate Python script. This script (not completed) performs the logging operations and broadcasts its status for display in the user interface
+
+Log file location is currently hardcoded to directory `/var/www/html/logging`
 #### Messages
 ##### Module heartbeat
 The module should broadcast a heartbeat so that the user knows that the module is operational.
