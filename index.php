@@ -27,12 +27,12 @@
 								</select>
 							</div>
 							<div class="row">
-								<div class="alert alert-warning" v-if="triggerError">
+								<div class="alert alert-warning col-12" v-if="triggerError">
 									Must select a logging trigger to start logging. (If trigger select has no options, there is no current data. 
 									Data can be manually input in the 'Manual Input' section.
 								</div>
-								<div class="alert alert-success col-12" v-if="logging">
-									Logging to file: {{logFileName}}
+								<div class="alert alert-success col-12" v-if="logFileName != ''">
+									Log file created: <a :href="logFilePath" download>{{logFileName}}</a>
 								</div>
 								<button class="btn btn-primary" v-if="!logging" @click="startLogging">Start</button>
 								<button class="btn btn-primary" v-if="logging" @click="stopLogging">Stop</button>

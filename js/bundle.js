@@ -290,7 +290,8 @@ var app = new _vue.default({
     secondsSinceProcessorUpdate: 0,
     trigger: '',
     triggerError: false,
-    logFileName: ''
+    logFileName: '',
+    logFilePath: ''
   },
 
   mounted() {
@@ -306,8 +307,7 @@ var app = new _vue.default({
     this.$mqtt.on("message", function (topic, message) {
       self = this;
       console.log("topic:" + topic + ", message:" + message);
-      var topicArray = topic.split('/');
-      console.log(JSON.stringify(topicArray));
+      var topicArray = topic.split('/'); //console.log(JSON.stringify(topicArray));
 
       if (topicArray[0] == 'data' && topicArray[1] == 'numeric') {
         var val = parseFloat(message);
@@ -343,8 +343,10 @@ var app = new _vue.default({
         var msg = JSON.parse(message); // message = {"logging":true/false}
 
         this.logging = msg.logging;
-      } else if (topicArray[0] == 'processor' && topicArray[1] == 'loggingStart') {
-        self.logFileName = message;
+      } else if (topicArray[0] == 'processor' && topicArray[1] == 'loggingStop') {
+        var msg = JSON.parse(message);
+        self.logFileName = msg.filename;
+        self.logFilePath = msg.path;
       }
     }.bind(this));
     setInterval(this.updateSecondsSinceProcessor, 1000);
@@ -369,6 +371,7 @@ var app = new _vue.default({
         this.triggerError = true;
       } else {
         this.triggerError = false;
+        this.logFileName = '';
         var msg = {};
         msg.command = 'start';
         msg.trigger = this.trigger;

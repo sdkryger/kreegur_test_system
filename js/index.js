@@ -18,6 +18,7 @@ var app = new Vue({
 	trigger:'',	
 	triggerError: false,
 	logFileName: '',
+	logFilePath: '',
     },
     mounted(){
 	console.log("server ip address is: "+ipAddress);
@@ -30,7 +31,7 @@ var app = new Vue({
             self = this;
             console.log("topic:"+topic+", message:"+message);
 	    var topicArray = topic.split('/');
-	    console.log(JSON.stringify(topicArray));
+	    //console.log(JSON.stringify(topicArray));
 	    if(topicArray[0] == 'data' && topicArray[1] == 'numeric'){
 		var val = parseFloat(message);
 		var name = topicArray[2];
@@ -59,8 +60,10 @@ var app = new Vue({
 		this.secondsSinceProcessorUpdate = 0;
 		var msg = JSON.parse(message); // message = {"logging":true/false}
 		this.logging = msg.logging;
-	    } else if (topicArray[0] == 'processor' && topicArray[1] == 'loggingStart'){
-		self.logFileName = message;
+	    } else if (topicArray[0] == 'processor' && topicArray[1] == 'loggingStop'){
+		var msg = JSON.parse(message);
+		self.logFileName = msg.filename;
+		self.logFilePath = msg.path;
 	    }
 		
         }.bind(this));
@@ -85,6 +88,7 @@ var app = new Vue({
 		this.triggerError = true;
 	    }else{
 		this.triggerError = false;
+		this.logFileName = '';
 		var msg = {};
 		msg.command = 'start';
 		msg.trigger = this.trigger;

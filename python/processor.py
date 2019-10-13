@@ -12,6 +12,7 @@ state = {
 numericNames = [] #names of all the numeric data 
 numericValues = [] #values of all the numeric data
 logFile = '' #file reference
+filename = '' #filename'
 wr = '' #csv file writer
 
 
@@ -21,6 +22,7 @@ def on_message(client, userdata, msg):
     global numericData
     global logFile
     global wr
+    global filename
     #print(msg.topic+" "+str(msg.payload))
     if(msg.topic == 'processor/logging'):
         #print "Logging message received: "+str(msg.payload)
@@ -37,7 +39,6 @@ def on_message(client, userdata, msg):
             try:
                 logFile = open(filepath, "w")
                 print "success opening file"
-                client.publish('processor/loggingStart',filename)
             except:
                 print "file open error: " + sys.exc_info()[0]
             wr = csv.writer(logFile, dialect='excel')
@@ -47,6 +48,7 @@ def on_message(client, userdata, msg):
             print "should stop logging"
             state.update({"logging":False})
             logFile.close()
+            client.publish('processor/loggingStop',json.dumps({"filename":filename,"path":'logging/'+filename}))
     elif (msg.topic != 'processor/heartbeat'): #ignore processor/heartbeat topic
         topicArray = msg.topic.split('/')
         print topicArray
