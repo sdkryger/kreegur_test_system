@@ -9,11 +9,12 @@ state = {
     "logging":False,
     "trigger":''
 }
-numericNames = [] #names of all the numeric data 
-numericValues = [] #values of all the numeric data
+numericNames = ['Elapsed time (s)'] #names of all the numeric data 
+numericValues = [0.00] #values of all the numeric data
 logFile = '' #file reference
 filename = '' #filename'
 wr = '' #csv file writer
+startTime = datetime.datetime.now() #file start time
 
 
 # The callback for when a PUBLISH message is received from the server.
@@ -23,6 +24,7 @@ def on_message(client, userdata, msg):
     global logFile
     global wr
     global filename
+    global startTime
     #print(msg.topic+" "+str(msg.payload))
     if(msg.topic == 'processor/logging'):
         #print "Logging message received: "+str(msg.payload)
@@ -39,9 +41,11 @@ def on_message(client, userdata, msg):
             try:
                 logFile = open(filepath, "w")
                 print "success opening file"
+                startTime = datetime.datetime.now()
             except:
                 print "file open error: " + sys.exc_info()[0]
             wr = csv.writer(logFile, dialect='excel')
+            print(numericNames)
             wr.writerow(numericNames)
             
         else:
@@ -51,7 +55,7 @@ def on_message(client, userdata, msg):
             client.publish('processor/loggingStop',json.dumps({"filename":filename,"path":'logging/'+filename}))
     elif (msg.topic != 'processor/heartbeat'): #ignore processor/heartbeat topic
         topicArray = msg.topic.split('/')
-        print topicArray
+        
         if(topicArray[0] == 'data' and topicArray[1] == 'numeric'):
             val = float(msg.payload)
             name = topicArray[2]
@@ -70,8 +74,12 @@ def on_message(client, userdata, msg):
             if(state["logging"] and state["trigger"] == name):
                 #print "value has triggered logging"
                 #should log to file
+                currTime = datetime.datetime.now()
+                delta = currTime - startTime
+                numericValues[0] = round(delta.total_seconds(),3)
                 wr.writerow(numericValues)
         else:
+            print topicArray
             print str(msg.payload)
                 
                 
