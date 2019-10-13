@@ -1,5 +1,5 @@
 # kreegur_test_system
-Test rig software - browser based data logging and control
+Test rig software - browser based data logging
 
 ## Overview
 ### Purpose
@@ -8,19 +8,21 @@ General data logging and viewing (numeric values) from any source.
 ### Architecture
 - Data distribution and communication via MQTT broker
 - Data viewing via page on web server
-- Data logging via Python script (not implemented yet)
+- Data logging via Python script
 
 ### Hardware
 - Currently implemented on a Raspberry Pi but other hardware could be used
 
 ## Installation
 - Must install mqtt broker such as Mosquitto. The system currently expects the mqtt broker to be installed on the same machine (same ip address)
+  - MQTT broker must be configured for port 1883 and websockets on port 9001
 - Tested with Apache server with php
 - Place files in Apache public docs folder (/var/www/html)
 
 ## Operation
 - Start Python script `python/processor.py` to send processor heartbeat
-- OPTIONAL - Start Python script `python/simulatedData.py` to broadcast simulated data
+- OPTIONAL - Start Python script `python/simulatedData.py` to generate simulated data
+- OPTIONAL - Start Python script `python/apiCarbonIntensity.py` to retrieve data from a web api (in this case, UK carbon intensity)
 
 ### Data display and logging
 Publish data to the mqtt broker to display it and log it. 
