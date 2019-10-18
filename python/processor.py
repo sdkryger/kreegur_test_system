@@ -78,9 +78,18 @@ def on_message(client, userdata, msg):
                 delta = currTime - startTime
                 numericValues[0] = round(delta.total_seconds(),3)
                 wr.writerow(numericValues)
-        else:
-            print topicArray
-            print str(msg.payload)
+                fileSize = logFile.tell()
+                fileSize = round(fileSize / 1024.0,3)
+                if fileSize > 1024:
+                    fileSize = round(fileSize / 1024.0,3)
+                    fileSize = str(fileSize) + ' MB'
+                else:
+                    fileSize = str(fileSize) + ' kB'
+                print fileSize
+                client.publish("processor/fileSize",fileSize)
+        #else:
+            #print topicArray
+            #print str(msg.payload)
                 
                 
                 

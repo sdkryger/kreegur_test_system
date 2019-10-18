@@ -19,6 +19,7 @@ var app = new Vue({
 	triggerError: false,
 	logFileName: '',
 	logFilePath: '',
+	logFileSize: '',
     },
     mounted(){
 	console.log("server ip address is: "+ipAddress);
@@ -64,6 +65,8 @@ var app = new Vue({
 		var msg = JSON.parse(message);
 		self.logFileName = msg.filename;
 		self.logFilePath = msg.path;
+	    } else if (topicArray[0] == 'processor' && topicArray[1] == 'fileSize'){
+		self.logFileSize = message;
 	    }
 		
         }.bind(this));

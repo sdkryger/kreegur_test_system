@@ -291,7 +291,8 @@ var app = new _vue.default({
     trigger: '',
     triggerError: false,
     logFileName: '',
-    logFilePath: ''
+    logFilePath: '',
+    logFileSize: ''
   },
 
   mounted() {
@@ -347,6 +348,8 @@ var app = new _vue.default({
         var msg = JSON.parse(message);
         self.logFileName = msg.filename;
         self.logFilePath = msg.path;
+      } else if (topicArray[0] == 'processor' && topicArray[1] == 'fileSize') {
+        self.logFileSize = message;
       }
     }.bind(this));
     setInterval(this.updateSecondsSinceProcessor, 1000);

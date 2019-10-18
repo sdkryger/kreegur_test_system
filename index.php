@@ -16,7 +16,7 @@
 						<div class="card-header" @click="toggleLogging">
 							<span v-if="showLogging" class="mr-3">-</span><span v-if="!showLogging" class="mr-3">+</span> Logging 
 							<span class="badge badge-pill badge-danger" v-if="secondsSinceProcessorUpdate > 2">Error - no comms</span>
-							<span class="badge badge-pill badge-success" v-if="logging">Logging to file</span>
+							<span class="badge badge-pill badge-success" v-if="logging">Logging to file (size: {{logFileSize}})</span>
 							<span class="badge badge-pill badge-danger" v-if="!logging">NOT logging to file</span>
 						</div>
 						<div class="card-body" v-if="showLogging">
