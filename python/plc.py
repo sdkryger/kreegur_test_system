@@ -18,7 +18,7 @@ print outputs
 
 while True:
     analogInputs = c.read_holding_registers(28672,8)
-    print analogInputs
+    #print analogInputs
     if analogInputs:
         analogInputs = [utils.decode_ieee(f) for f in utils.word_list_to_long(analogInputs,False)]
     i = 0    
@@ -34,7 +34,7 @@ while True:
         scaledValue = scaleAI[i]["m"] * value + scaleAI[i]["b"]
         analogInputs[i] = scaledValue
         i = i + 1
-    print analogInputs
+    #print analogInputs
     client.publish('data/numeric/temperatureOffice_degC','%.02f' % analogInputs[0])
     client.publish('data/numeric/temperatureOutside_degC','%.02f' % analogInputs[1])
 

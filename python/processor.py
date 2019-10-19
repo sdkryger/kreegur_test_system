@@ -29,17 +29,19 @@ def on_message(client, userdata, msg):
     if(msg.topic == 'processor/logging'):
         #print "Logging message received: "+str(msg.payload)
         message = json.loads(str(msg.payload))
-        print message
+        #print message
         if(message["command"]=='start'):
             #print "should start logging"
             state.update({"logging":True})
             state.update({"trigger":message["trigger"]})
-            print state
+            #print state
             filename = datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S") + '.csv'
-            filepath = '/var/www/html/logging/'+filename
+            filepath = '/var/www/html/logging/'+filename #linux
+            #filepath = "C:\\Apache24\\htdocs\\kreegur_test_system\\logging\\"+filename #windows
             
             try:
-                logFile = open(filepath, "w")
+                logFile = open(filepath, "w") #linux
+                #logFile = open(filepath, "wb") #windows
                 print "success opening file"
                 startTime = datetime.datetime.now()
             except:
@@ -85,7 +87,7 @@ def on_message(client, userdata, msg):
                     fileSize = str(fileSize) + ' MB'
                 else:
                     fileSize = str(fileSize) + ' kB'
-                print fileSize
+                #print fileSize
                 client.publish("processor/fileSize",fileSize)
         #else:
             #print topicArray
