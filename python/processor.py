@@ -36,12 +36,12 @@ def on_message(client, userdata, msg):
             state.update({"trigger":message["trigger"]})
             #print state
             filename = datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S") + '.csv'
-            filepath = '/var/www/html/logging/'+filename #linux
-            #filepath = "C:\\Apache24\\htdocs\\kreegur_test_system\\logging\\"+filename #windows
+            #filepath = '/var/www/html/logging/'+filename #linux
+            filepath = "C:\\Apache24\\htdocs\\kreegur_test_system\\logging\\"+filename #windows
             
             try:
-                logFile = open(filepath, "w") #linux
-                #logFile = open(filepath, "wb") #windows
+                #logFile = open(filepath, "w") #linux
+                logFile = open(filepath, "wb") #windows
                 print "success opening file"
                 startTime = datetime.datetime.now()
             except:

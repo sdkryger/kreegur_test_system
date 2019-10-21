@@ -10,7 +10,7 @@ client.loop_start()
 while True:
     i = 1
     for name in names:
-        val = i * 100 + random.random()
+        val = i * 100 + random.random()*10.0
         client.publish('data/numeric/'+name,'%.02f' % val)
         i = i + 1
     time.sleep(0.5)

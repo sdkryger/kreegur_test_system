@@ -90,13 +90,19 @@
 				
 				
 			</div>
+			<div class="row">
+				<div class="col-12">
+					<visualisation :datacollection="graphData"></visualisation>
+				</div>
+
+			</div>
 			
 		</div>
 		<link rel="stylesheet" href="css/bootstrap.css">
 		<script>
 			var ipAddress = "<?php echo $_SERVER['SERVER_ADDR']; ?>";
 		</script>
-		<script src="js/bundle.js">
+		<script src="js/dist/bundle.js">
 		</script>
 	</body>
 
