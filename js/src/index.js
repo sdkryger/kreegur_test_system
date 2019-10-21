@@ -21,7 +21,6 @@ var app = new Vue({
 		logFileName: '',
 		logFilePath: '',
 		logFileSize: '',
-		datacollection: {},
 		graphLabels:[],
 		graphDatasets:[],
 		graphData:{},
@@ -42,23 +41,6 @@ var app = new Vue({
     mounted(){
 		this.graphData.labels = this.graphLabels;
 		this.graphData.datasets = this.graphDatasets;
-		this.datacollection = {
-			labels: [0,1,2,3,4,5,6,7,8,9,10,11],
-            datasets: [
-				{
-					label: "GitHub Commits",
-					backgroundColor: "#f87979",
-					data: [70, 20, 12, 39, 100, 40, 95, 80, 80, 20, 12, 101],
-					lineTension: 0
-				  },
-				  {
-					label: "Monthly incomes",
-					backgroundColor: "#A5CC82",
-					data: [205, 408, 188, 190, 58, 200, 190, 400, 164, 254, 290, 201],
-					lineTension: 0
-				  }
-            ]
-          };
 	console.log("server ip address is: "+ipAddress);
 	if(ipAddress == '::1')
 	    ipAddress = 'localhost';
@@ -158,7 +140,7 @@ var app = new Vue({
 			}
 			Vue.set(self.graphLabels,self.graphLabels.length,self.graphCounter);
 			self.graphCounter++;
-			if(self.graphLabels.length>100){
+			if(self.graphLabels.length>maxLength){
 				self.graphLabels.splice(0,1);
 			}
 		}
