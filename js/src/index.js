@@ -223,6 +223,9 @@ var app = new Vue({
 					);
 			}
 			
+		},
+		removeCondition: function(outputIndex,conditionIndex){
+			self.outputs[outputIndex].conditions.splice(conditionIndex,1);
 		}
     }
 });

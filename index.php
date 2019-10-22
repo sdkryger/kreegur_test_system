@@ -83,14 +83,20 @@
 								<div class="col-12 mb-2">
 									{{out.description}}
 								</div>
-								<div class="col-11 border rounded alert alert-secondary ml-2">
+								<div class="col-md-5 col-11 border rounded alert alert-secondary ml-2">
 									<h4>Conditions:</h4>
-									<div v-for="condition in out.conditions">
-										Output <span v-if="condition.on">ON</span><span v-else>OFF</span> if {{condition.channel}} <span v-if="condition.greaterThan">greater than</span><span v-else>less than</span> {{condition.threshold}}
+									<div v-for="(condition,conditionIndex) in out.conditions" class="row mb-1">
+										<div class="col-8">
+											Output <span v-if="condition.on">ON</span><span v-else>OFF</span> if {{condition.channel}} 
+											<span v-if="condition.greaterThan">greater than</span><span v-else>less than</span> {{condition.threshold}}
+										</div>
+										<div class="col-4">
+											<button class="btn btn-primary btn-sm btn-block" @click="removeCondition(index,conditionIndex)">Delete</button>
+										</div>
 									</div>
 
 								</div>
-								<div class="col-11 border rounded alert alert-secondary ml-2">
+								<div class="col-md-5 col-11 border rounded alert alert-secondary ml-2">
 									<h4>Add new condition</h4>
 									<div class="form-group">
 										<label for="select">Output</label>
