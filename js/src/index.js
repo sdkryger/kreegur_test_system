@@ -2,8 +2,6 @@ import Vue from 'vue';
 import VueMqtt from 'vue-mqtt';
 var $ = require("jquery");
 require('bootstrap');
-//import Visualisation from './components/Visualisation.vue';
-//import Chart from 'chart.js';
 var mychartLabels = [];
 var mychartDatasets = [];
 window.onload = function(){
@@ -50,8 +48,8 @@ var app = new Vue({
     el: '#app',
     data: {
 		showManual: false,
-		showLatestValues: true,
-		showLogging: true,
+		showLatestValues: false,
+		showLogging: false,
 		pubTopic:'data/numeric/temperatureOuter',
 		pubPayload:'1.23',
 		numericData:[],
@@ -63,9 +61,6 @@ var app = new Vue({
 		logFileName: '',
 		logFilePath: '',
 		logFileSize: '',
-		//graphLabels:[],
-		//graphDatasets:[],
-		//graphData:{},
 		chartColors: [
 			'rgb(255, 99, 132)',
 			'rgb(255, 159, 64)',
@@ -75,14 +70,35 @@ var app = new Vue({
 			'rgb(153, 102, 255)',
 			'rgb(201, 203, 207)'
 		],
-		graphCounter:0
+		graphCounter:0,
+		showOutputs: false,
+		outputs: [
+			{
+				name: 'output/0',
+				description: 'Heater On',
+				conditions:[],
+				newConditionChannel: '',
+				newConditionGreaterThan: 'true',
+				newThreshold: '0',
+				error: false,
+				newConditionOn: 'true'
+			},
+			{
+				name: 'output/1',
+				description: 'Motor On',
+				conditions:[],
+				newConditionChannel: '',
+				newConditionGreaterThan: 'true',
+				newThreshold: '0',
+				error: false,
+				newConditionOn: 'true'
+			},
+		]
 	},
     mounted(){
-		//this.graphData.labels = this.graphLabels;
-		//this.graphData.datasets = this.graphDatasets;
-	console.log("server ip address is: "+ipAddress);
-	if(ipAddress == '::1')
-	    ipAddress = 'localhost';
+		console.log("server ip address is: "+ipAddress);
+		if(ipAddress == '::1')
+	    	ipAddress = 'localhost';
         console.log("vue mounted");
         Vue.use(VueMqtt, 'mqtt://'+ipAddress+':9001', {clientId: 'WebClient-' + parseInt(Math.random() * 100000)});
         this.$mqtt.subscribe('#');
@@ -115,7 +131,12 @@ var app = new Vue({
 			self.numericData.push(t);
 			t = {label:name,backgroundColor:self.chartColors[self.numericData.length % 7],borderColor:self.chartColors[self.numericData.length % 7],data:[],lineTension:0,fill:false};
 			//self.graphDatasets.push(t);
+			
+			for(var i=0;i<mychartDatasets.length;i++){
+				mychartDatasets[i].data = [];
+			}
 			mychartDatasets.push(t);
+			self.graphCounter = 0;
 		}
 	    } else if (topicArray[0] == 'processor' && topicArray[1] == 'heartbeat'){
 		this.lastProcessorUpdate = new Date();
@@ -148,6 +169,9 @@ var app = new Vue({
 		toggleLogging: function(){
 			this.showLogging= !this.showLogging;
 		},
+		toggleShowOutputs: function(){
+			this.showOutputs= !this.showOutputs;
+		},
 		startLogging: function(){
 			if(this.trigger == ''){
 			this.triggerError = true;
@@ -172,24 +196,33 @@ var app = new Vue({
 			var i = 0;
 			var self = this;
 			var maxLength = 3600;
-			//self.graphLabels.push(self.graphLabels.length);
 			for(i = 0; i<self.numericData.length;i++){
-				//self.graphDatasets[i].data.push(self.numericData[i].latestValue);
 				mychartDatasets[i].data.push(self.numericData[i].latestValue);
 				if(mychartDatasets[i].data.length>maxLength)
 					mychartDatasets[i].data.splice(0,1);
-				//if(self.graphDatasets[i].data.length>maxLength)
-					//self.graphDatasets[i].data.splice(0,1);
 			}
-			//Vue.set(self.graphLabels,self.graphLabels.length,self.graphCounter);
 			mychartLabels.push(self.graphCounter);
 			if(mychartLabels.length>maxLength)
 				mychartLabels.splice(0,1);
 			self.graphCounter++;
-			//if(self.graphLabels.length>maxLength){
-			//	self.graphLabels.splice(0,1);
-			//}
 			window.myChart3.update();
+		},
+		addCondition: function(index){
+			var self = this;
+			if(self.outputs[index].newConditionChannel == ''){
+				self.outputs[index].error = true;
+			} else {
+				self.outputs[index].error = false;
+				self.outputs[index].conditions.push(
+					{
+						channel:self.outputs[index].newConditionChannel,
+						greaterThan:self.outputs[index].newConditionGreaterThan == 'true',
+						threshold:parseFloat(self.outputs[index].newThreshold),
+						on: self.outputs[index].newConditionOn == 'true'
+					}
+					);
+			}
+			
 		}
     }
 });
