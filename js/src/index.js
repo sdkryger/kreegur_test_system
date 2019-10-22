@@ -75,23 +75,25 @@ var app = new Vue({
 		outputs: [
 			{
 				name: 'output/0',
-				description: 'Heater On',
+				description: 'Heater',
 				conditions:[],
 				newConditionChannel: '',
 				newConditionGreaterThan: 'true',
 				newThreshold: '0',
 				error: false,
-				newConditionOn: 'true'
+				newConditionOn: 'true',
+				outputOn:false
 			},
 			{
 				name: 'output/1',
-				description: 'Motor On',
+				description: 'Motor',
 				conditions:[],
 				newConditionChannel: '',
 				newConditionGreaterThan: 'true',
 				newThreshold: '0',
 				error: false,
-				newConditionOn: 'true'
+				newConditionOn: 'true',
+				outputOn:false
 			},
 		]
 	},
@@ -225,7 +227,10 @@ var app = new Vue({
 			
 		},
 		removeCondition: function(outputIndex,conditionIndex){
-			self.outputs[outputIndex].conditions.splice(conditionIndex,1);
+			this.outputs[outputIndex].conditions.splice(conditionIndex,1);
+		},
+		setState: function(state,index){
+			this.outputs[index].outputOn = state;
 		}
     }
 });

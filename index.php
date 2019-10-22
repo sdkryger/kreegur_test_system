@@ -81,14 +81,18 @@
 							<div class="alert alert-warning">Outputs not yet implemented</div>
 							<div class="row border rounded mb-1" v-for="(out, index) in outputs">
 								<div class="col-12 mb-2">
-									{{out.description}}
+									{{out.description}} 
+								</div>
+								<div class="col-12 mb-2">
+									<button v-if="out.outputOn" class="btn btn-success" @click="setState(false,index)">ON (click to turn OFF)</button>
+									<button v-else class="btn btn-danger" @click="setState(true,index)">OFF (click to turn ON)</button>
 								</div>
 								<div class="col-md-5 col-11 border rounded alert alert-secondary ml-2">
-									<h4>Conditions:</h4>
+									<h4>Conditions (latching):</h4>
 									<div v-for="(condition,conditionIndex) in out.conditions" class="row mb-1">
 										<div class="col-8">
-											Output <span v-if="condition.on">ON</span><span v-else>OFF</span> if {{condition.channel}} 
-											<span v-if="condition.greaterThan">greater than</span><span v-else>less than</span> {{condition.threshold}}
+											{{out.description}} <span v-if="condition.on">ON</span><span v-else>OFF</span> if {{condition.channel}} 
+											<span v-if="condition.greaterThan">rises above</span><span v-else>drops below</span> {{condition.threshold}}
 										</div>
 										<div class="col-4">
 											<button class="btn btn-primary btn-sm btn-block" @click="removeCondition(index,conditionIndex)">Delete</button>
@@ -97,7 +101,7 @@
 
 								</div>
 								<div class="col-md-5 col-11 border rounded alert alert-secondary ml-2">
-									<h4>Add new condition</h4>
+									<h4>Add new latch condition</h4>
 									<div class="form-group">
 										<label for="select">Output</label>
 										<select class="form-control" v-model="outputs[index].newConditionOn" id="select">
@@ -115,8 +119,8 @@
 									<div class="form-group">
 										<label for="select">is</label>
 										<select class="form-control" v-model="outputs[index].newConditionGreaterThan" id="select">
-											<option value="true">Greater than</option>
-											<option value="false">Less than</option>
+											<option value="true">rises above</option>
+											<option value="false">drops below</option>
 										</select>
 									</div>
 									<div class="form-group">
