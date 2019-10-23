@@ -79,16 +79,16 @@
 						</div>
 						<div class="card-body" v-if="showOutputs">
 							<div class="alert alert-warning">Outputs not yet implemented</div>
-							<div class="row border rounded mb-1" v-for="(out, index) in outputs">
-								<div class="col-12 mb-2">
-									{{out.description}} 
+							<div class="row border rounded m-2 border-secondary" v-for="(out, index) in outputs">
+								<div class="col-12 mb-2 bg-secondary text-white">
+									<h3>{{out.description}} </h3>
 								</div>
 								<div class="col-12 mb-2">
 									<button v-if="out.outputOn" class="btn btn-success" @click="setState(false,index)">ON (click to turn OFF)</button>
 									<button v-else class="btn btn-danger" @click="setState(true,index)">OFF (click to turn ON)</button>
 								</div>
 								<div class="col-md-5 col-11 border rounded alert alert-secondary ml-2">
-									<h4>Conditions (latching):</h4>
+									<h5>Conditions (latching):</h5>
 									<div v-for="(condition,conditionIndex) in out.conditions" class="row mb-1">
 										<div class="col-8">
 											{{out.description}} <span v-if="condition.on">ON</span><span v-else>OFF</span> if {{condition.channel}} 
@@ -101,7 +101,7 @@
 
 								</div>
 								<div class="col-md-5 col-11 border rounded alert alert-secondary ml-2">
-									<h4>Add new latch condition</h4>
+									<h5>Add new latch condition</h5>
 									<div class="form-group">
 										<label for="select">Output</label>
 										<select class="form-control" v-model="outputs[index].newConditionOn" id="select">
