@@ -42,8 +42,8 @@
 				</div>
 				
 			</div>
-			<div class="row">
-				<div class="col-12">
+			<div class="row justify-content-center">
+				<div class="col-11">
 					<canvas id="myChart2" width="400" height="400"></canvas>
 				</div>
 			</div>
@@ -73,7 +73,7 @@
 			</div>
 			<div class="row justify-content-center mt-2">
 				<div class="col-11">
-					<div class="card">
+					<div class="card" v-if="control">
 						<div class="card-header" @click="toggleShowOutputs">
 							<span v-if="showOutputs" class="mr-3">-</span><span v-if="!showOutputs" class="mr-3">+</span> Control
 						</div>
@@ -157,8 +157,19 @@
 						
 					</div>
 				</div>
-				
-				
+			</div>
+			<div class="row justify-content-center mt-2" v-if="settings">
+				<div class="col-11">
+					<div class="card">
+						<div class="card-header" @click="toggleShowSettings()">
+							<span v-if="showSettings" class="mr-3">-</span><span v-if="!showSettings" class="mr-3">+</span> Settings
+						</div>
+						<div class="card-body" v-if="showSettings">
+							Settings should go here...
+						</div>
+						
+					</div>
+				</div>
 			</div>
 			
 			

@@ -95,7 +95,10 @@ var app = new Vue({
 				newConditionOn: 'true',
 				outputOn:false
 			},
-		]
+		],
+		control: false,
+		settings: false,
+		showSettings: false
 	},
     mounted(){
 		console.log("server ip address is: "+ipAddress);
@@ -173,6 +176,9 @@ var app = new Vue({
 		},
 		toggleShowOutputs: function(){
 			this.showOutputs= !this.showOutputs;
+		},
+		toggleShowSettings: function(){
+			this.showSettings= !this.showSettings;
 		},
 		startLogging: function(){
 			if(this.trigger == ''){
