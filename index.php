@@ -165,7 +165,9 @@
 							<span v-if="showSettings" class="mr-3">-</span><span v-if="!showSettings" class="mr-3">+</span> Settings
 						</div>
 						<div class="card-body" v-if="showSettings">
-							Settings should go here...
+							<div v-for="set in settingsList">
+								{{set.description}}, {{set.value}}
+							</div>
 						</div>
 						
 					</div>

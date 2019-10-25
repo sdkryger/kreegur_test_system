@@ -98,7 +98,8 @@ var app = new Vue({
 		],
 		control: false,
 		settings: false,
-		showSettings: false
+		showSettings: false,
+		settingsList:[]
 	},
     mounted(){
 		console.log("server ip address is: "+ipAddress);
@@ -110,51 +111,62 @@ var app = new Vue({
         this.$mqtt.on("message", function(topic, message) {
             self = this;
             //console.log("topic:"+topic+", message:"+message);
-	    var topicArray = topic.split('/');
-	    //console.log(JSON.stringify(topicArray));
-	    if(topicArray[0] == 'data' && topicArray[1] == 'numeric'){
-		var val = parseFloat(message);
-		var name = topicArray[2];
-		//console.log("numeric:"+topicArray[2]+" has a value of "+val);
-		var found = false;
-		var updatedAt = new Date();
-		$.each(self.numericData, function(index,value){
-		    if(name == value.name){
-				found = true;
-				//self.numericData[index].values.push(val); // data for graph
-				//self.numericData[index].timestamps.push(updatedAt); //data for graph
-				self.numericData[index].latestValue = val;
-				self.numericData[index].lastUpdated = updatedAt;
-		    }
-		});
-		if(!found){
-		    var t = {name: name, values:[], timestamps:[]};
-		    //t.values.push(val); //data for graph
-		    //t.timestamps.push(updatedAt); //data for graph
-		    t.latestValue = val;
-		    t.lastUpdated = updatedAt;
-			self.numericData.push(t);
-			t = {label:name,backgroundColor:self.chartColors[self.numericData.length % 7],borderColor:self.chartColors[self.numericData.length % 7],data:[],lineTension:0,fill:false};
-			//self.graphDatasets.push(t);
-			
-			for(var i=0;i<mychartDatasets.length;i++){
-				mychartDatasets[i].data = [];
+			var topicArray = topic.split('/');
+			//console.log(JSON.stringify(topicArray));
+			if(topicArray[0] == 'data' && topicArray[1] == 'numeric'){
+			var val = parseFloat(message);
+			var name = topicArray[2];
+			//console.log("numeric:"+topicArray[2]+" has a value of "+val);
+			var found = false;
+			var updatedAt = new Date();
+			$.each(self.numericData, function(index,value){
+				if(name == value.name){
+					found = true;
+					//self.numericData[index].values.push(val); // data for graph
+					//self.numericData[index].timestamps.push(updatedAt); //data for graph
+					self.numericData[index].latestValue = val;
+					self.numericData[index].lastUpdated = updatedAt;
+				}
+			});
+			if(!found){
+				var t = {name: name, values:[], timestamps:[]};
+				//t.values.push(val); //data for graph
+				//t.timestamps.push(updatedAt); //data for graph
+				t.latestValue = val;
+				t.lastUpdated = updatedAt;
+				self.numericData.push(t);
+				t = {label:name,backgroundColor:self.chartColors[self.numericData.length % 7],borderColor:self.chartColors[self.numericData.length % 7],data:[],lineTension:0,fill:false};
+				//self.graphDatasets.push(t);
+				
+				for(var i=0;i<mychartDatasets.length;i++){
+					mychartDatasets[i].data = [];
+				}
+				mychartDatasets.push(t);
+				self.graphCounter = 0;
 			}
-			mychartDatasets.push(t);
-			self.graphCounter = 0;
-		}
-	    } else if (topicArray[0] == 'processor' && topicArray[1] == 'heartbeat'){
-		this.lastProcessorUpdate = new Date();
-		this.secondsSinceProcessorUpdate = 0;
-		var msg = JSON.parse(message); // message = {"logging":true/false}
-		this.logging = msg.logging;
-	    } else if (topicArray[0] == 'processor' && topicArray[1] == 'loggingStop'){
-		var msg = JSON.parse(message);
-		self.logFileName = msg.filename;
-		self.logFilePath = msg.path;
-	    } else if (topicArray[0] == 'processor' && topicArray[1] == 'fileSize'){
-		self.logFileSize = message;
-	    }
+			} else if (topicArray[0] == 'processor' && topicArray[1] == 'heartbeat'){
+			this.lastProcessorUpdate = new Date();
+			this.secondsSinceProcessorUpdate = 0;
+			var msg = JSON.parse(message); // message = {"logging":true/false}
+			this.logging = msg.logging;
+			} else if (topicArray[0] == 'processor' && topicArray[1] == 'loggingStop'){
+			var msg = JSON.parse(message);
+			self.logFileName = msg.filename;
+			self.logFilePath = msg.path;
+			} else if (topicArray[0] == 'processor' && topicArray[1] == 'fileSize'){
+			self.logFileSize = message;
+			} else if (topicArray[0] == 'setting'){
+				self.settings = true;
+				var found = false;
+				console.log("a");
+				// check if the setting is there already
+
+				// message expected... {"name":"ch0_b","description":"Channel 0 y-intercept (b)","value":0,"dataType":"numeric"}
+				if(!found){
+					self.settingsList.push(JSON.parse(message));
+				}
+				console.log("b");
+			}
 		
         }.bind(this));
 	setInterval(this.updateSecondsSinceProcessor,1000);
