@@ -161,7 +161,7 @@ var app = new Vue({
 				console.log("a");
 				// check if the setting is there already
 
-				// message expected... {"name":"ch0_b","description":"Channel 0 y-intercept (b)","value":0,"dataType":"numeric"}
+				// message expected... {"name":"ch0_b","description":"Channel 0 y-intercept (b)","value":0,"dataType":"numeric","returnTopic":"plc/ch/0/b"}
 				if(!found){
 					self.settingsList.push(JSON.parse(message));
 				}
@@ -249,6 +249,10 @@ var app = new Vue({
 		},
 		setState: function(state,index){
 			this.outputs[index].outputOn = state;
+		},
+		settingChange: function(index){
+			var self = this;
+			alert("the new setting value is: "+JSON.stringify(self.settingsList[index].value)+" and the topic is: "+self.settingsList[index].returnTopic);
 		}
     }
 });

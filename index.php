@@ -165,8 +165,17 @@
 							<span v-if="showSettings" class="mr-3">-</span><span v-if="!showSettings" class="mr-3">+</span> Settings
 						</div>
 						<div class="card-body" v-if="showSettings">
-							<div v-for="set in settingsList">
-								{{set.description}}, {{set.value}}
+							<div class="row" v-for="(set, index) in settingsList">
+								<div class="col-6">
+									{{set.description}}
+								</div> 
+								<div class="col-6" v-if="settingsList[index].dataType=='numeric' || settingsList[index].dataType=='string'" >
+									<input type="text" v-model="settingsList[index].value" @change="settingChange(index)">
+								</div>
+								<div class="custom-control custom-switch col-6" v-if="settingsList[index].dataType=='boolean'" >
+									<input type="checkbox" class="custom-control-input" v-model="settingsList[index].value" id="switch" @change="settingChange(index)">
+									<label class="custom-control-label" for="switch">On/off</label>
+								</div>
 							</div>
 						</div>
 						
