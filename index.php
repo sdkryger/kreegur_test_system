@@ -173,8 +173,8 @@
 									<input type="text" v-model="settingsList[index].value" @change="settingChange(index)">
 								</div>
 								<div class="custom-control custom-switch col-6" v-if="settingsList[index].dataType=='boolean'" >
-									<input type="checkbox" class="custom-control-input" v-model="settingsList[index].value" id="switch" @change="settingChange(index)">
-									<label class="custom-control-label" for="switch">On/off</label>
+									<input type="checkbox" class="custom-control-input" v-model="settingsList[index].value" :id="'switch'+index" @change="settingChange(index)">
+									<label class="custom-control-label" v-bind:for="'switch'+index">On/off</label>
 								</div>
 							</div>
 						</div>
