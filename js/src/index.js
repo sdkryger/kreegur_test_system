@@ -159,7 +159,6 @@ var app = new Vue({
 				self.settings = true;
 				var found = false;
 				var receivedSetting = JSON.parse(message);
-				console.log("a");
 				// check if the setting is there already
 				for(var i=0;i<self.settingsList.length;i++){
 					if(self.settingsList[i].returnTopic == receivedSetting.returnTopic){
@@ -173,7 +172,6 @@ var app = new Vue({
 				if(!found){
 					self.settingsList.push(JSON.parse(message));
 				}
-				console.log("b");
 			}
 		
         }.bind(this));
