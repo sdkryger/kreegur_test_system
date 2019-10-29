@@ -158,8 +158,16 @@ var app = new Vue({
 			} else if (topicArray[0] == 'setting'){
 				self.settings = true;
 				var found = false;
+				var receivedSetting = JSON.parse(message);
 				console.log("a");
 				// check if the setting is there already
+				for(var i=0;i<self.settingsList.length;i++){
+					if(self.settingsList[i].returnTopic == receivedSetting.returnTopic){
+						found = true;
+						self.settingsList[i] = receivedSetting;
+					}
+
+				}
 
 				// message expected... {"name":"ch0_b","description":"Channel 0 y-intercept (b)","value":0,"dataType":"numeric","returnTopic":"plc/ch/0/b"}
 				if(!found){
@@ -252,7 +260,8 @@ var app = new Vue({
 		},
 		settingChange: function(index){
 			var self = this;
-			alert("the new setting value is: "+JSON.stringify(self.settingsList[index].value)+" and the topic is: "+self.settingsList[index].returnTopic);
+			//alert("index: "+index+", the new setting value is: "+self.settingsList[index].value.toString()+" and the topic is: "+self.settingsList[index].returnTopic);
+			this.$mqtt.publish(self.settingsList[index].returnTopic,self.settingsList[index].value.toString());
 		}
     }
 });
