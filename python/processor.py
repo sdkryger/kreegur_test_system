@@ -14,7 +14,7 @@ numericValues = [0.00] #values of all the numeric data
 logFile = '' #file reference
 filename = '' #filename'
 wr = '' #csv file writer
-startTime = datetime.datetime.now() #file start time
+startTime = '' #datetime.datetime.now()'' #file start time
 
 def on_connect():
   print ("Connected!")
@@ -46,7 +46,7 @@ def on_message(client, userdata, msg):
                 #logFile = open(filepath, "w") #linux
                 logFile = open(filepath, "w", newline='') #windows
                 #print ("success opening file")
-                startTime = datetime.datetime.now()
+                #startTime = datetime.datetime.now()
             except:
                 print ("file open error: " + sys.exc_info()[0])
             wr = csv.writer(logFile, dialect='excel')
@@ -79,24 +79,7 @@ def on_message(client, userdata, msg):
             #print (numericNames)
             #print (numericValues)
             
-            if(state["logging"] and state["trigger"] == name):
-                #print ("value has triggered logging")
-                #should log to file
-                currTime = datetime.datetime.now()
-                delta = currTime - startTime
-                numericValues[0] = round(delta.total_seconds(),3)
-                #print (numericValues)
-                wr.writerow(numericValues)
-                #print ("write success?")
-                fileSize = logFile.tell()
-                fileSize = round(fileSize / 1024.0,3)
-                if fileSize > 1024:
-                    fileSize = round(fileSize / 1024.0,3)
-                    fileSize = str(fileSize) + ' MB'
-                else:
-                    fileSize = str(fileSize) + ' kB'
-                #print ("filesize: "+fileSize)
-                client.publish("processor/fileSize",fileSize)
+            
         #else:
             #print topicArray
             #print str(msg.payload)
@@ -116,9 +99,35 @@ client.subscribe('#')
 client.loop_start()
 
 loopCount = 0
+loopStart = time.time()
 while True:
-    #print ("looping...")
+    if(state["logging"]):
+        if(startTime==''):
+            startTime = time.time()
+        #print ("value has triggered logging")
+        #should log to file
+        currTime = datetime.datetime.now()
+        delta = time.time() - startTime
+        numericValues[0] = round(delta,1)
+        print (numericValues)
+        wr.writerow(numericValues)
+        #print ("write success?")
+        fileSize = logFile.tell()
+        fileSize = round(fileSize / 1024.0,3)
+        if fileSize > 1024:
+            fileSize = round(fileSize / 1024.0,3)
+            fileSize = str(fileSize) + ' MB'
+        else:
+            fileSize = str(fileSize) + ' kB'
+            #print ("filesize: "+fileSize)
+            client.publish("processor/fileSize",fileSize)
+    #print(time.time())
     client.publish("processor/heartbeat",json.dumps(state))
     client.publish("data/numeric/temperatureOuter2_degC",loopCount)
-    time.sleep(1)
+    #print (time.time())
+    remainder = time.time()%1
+    #print (remainder)
+    toNextSecond = 1 - remainder
+    #print(toNextSecond)
+    time.sleep(toNextSecond)
     loopCount = loopCount + 1
