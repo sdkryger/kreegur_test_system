@@ -2,6 +2,9 @@ import Vue from 'vue';
 import VueMqtt from 'vue-mqtt';
 var $ = require("jquery");
 require('bootstrap');
+
+Vue.component('manual-input-component', require('./components/ManualInputComponent.vue').default );
+
 var mychartLabels = [];
 var mychartDatasets = [];
 window.onload = function(){
@@ -18,8 +21,9 @@ window.onload = function(){
 		animation: false,
 		scales:{
 			xAxes:[{
+        display:false,
 			  gridLines: {
-				  display: true,
+				  display: false,
 				  drawBorder: true,
 				  drawOnChartArea: false,
 				}
@@ -103,7 +107,7 @@ var app = new Vue({
 	},
     mounted(){
 		console.log("server ip address is: "+ipAddress);
-		if(ipAddress == '::1')
+		if(ipAddress == '::1' || true)
 	    	ipAddress = 'localhost';
         console.log("vue mounted");
         Vue.use(VueMqtt, 'mqtt://'+ipAddress+':9001', {clientId: 'WebClient-' + parseInt(Math.random() * 100000)});

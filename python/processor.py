@@ -16,22 +16,25 @@ filename = '' #filename'
 wr = '' #csv file writer
 startTime = datetime.datetime.now() #file start time
 
+def on_connect():
+  print ("Connected!")
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
     global state
-    global numericData
+    global numericNames
+    global numericValues
     global logFile
     global wr
     global filename
     global startTime
     #print(msg.topic+" "+str(msg.payload))
     if(msg.topic == 'processor/logging'):
-        #print "Logging message received: "+str(msg.payload)
-        message = json.loads(str(msg.payload))
-        #print message
+        #print ("Logging message received: "+str(msg.payload))
+        message = json.loads(msg.payload)
+        #print (message["command"])
         if(message["command"]=='start'):
-            #print "should start logging"
+            print ("should start logging")
             state.update({"logging":True})
             state.update({"trigger":message["trigger"]})
             #print state
@@ -41,17 +44,20 @@ def on_message(client, userdata, msg):
             
             try:
                 #logFile = open(filepath, "w") #linux
-                logFile = open(filepath, "wb") #windows
-                print "success opening file"
+                logFile = open(filepath, "w", newline='') #windows
+                #print ("success opening file")
                 startTime = datetime.datetime.now()
             except:
-                print "file open error: " + sys.exc_info()[0]
+                print ("file open error: " + sys.exc_info()[0])
             wr = csv.writer(logFile, dialect='excel')
-            print(numericNames)
+            #print("Opened log file")
+            #print(numericNames)
+            #print(wr)
             wr.writerow(numericNames)
+            #print("name write success")
             
         else:
-            print "should stop logging"
+            print ("should stop logging")
             state.update({"logging":False})
             logFile.close()
             client.publish('processor/loggingStop',json.dumps({"filename":filename,"path":'logging/'+filename}))
@@ -61,7 +67,7 @@ def on_message(client, userdata, msg):
         if(topicArray[0] == 'data' and topicArray[1] == 'numeric'):
             val = float(msg.payload)
             name = topicArray[2]
-            #print "received numeric data with name: " + name + " and value: "+ str(val)
+            #print ("received numeric data with name: " + name + " and value: "+ str(val))
             if(name in numericNames):
                 #print name + " is already in the list"
                 i = numericNames.index(name)
@@ -70,16 +76,18 @@ def on_message(client, userdata, msg):
                 #print "did not find " + name + " in the list, will add"
                 numericNames.append(name)
                 numericValues.append(val)
-            #print numericNames
-            #print numericValues
+            #print (numericNames)
+            #print (numericValues)
             
             if(state["logging"] and state["trigger"] == name):
-                #print "value has triggered logging"
+                #print ("value has triggered logging")
                 #should log to file
                 currTime = datetime.datetime.now()
                 delta = currTime - startTime
                 numericValues[0] = round(delta.total_seconds(),3)
+                #print (numericValues)
                 wr.writerow(numericValues)
+                #print ("write success?")
                 fileSize = logFile.tell()
                 fileSize = round(fileSize / 1024.0,3)
                 if fileSize > 1024:
@@ -87,7 +95,7 @@ def on_message(client, userdata, msg):
                     fileSize = str(fileSize) + ' MB'
                 else:
                     fileSize = str(fileSize) + ' kB'
-                #print fileSize
+                #print ("filesize: "+fileSize)
                 client.publish("processor/fileSize",fileSize)
         #else:
             #print topicArray
@@ -97,14 +105,20 @@ def on_message(client, userdata, msg):
                 
 
 client = mqtt.Client()
+client.on_connect = on_connect
 client.on_message = on_message
 
-print "will try to connect"
+print ("will try to connect")
 client.connect("127.0.0.1", 1883, 60)
+print ("Connected?")
 client.subscribe('#')
 
 client.loop_start()
 
+loopCount = 0
 while True:
+    #print ("looping...")
     client.publish("processor/heartbeat",json.dumps(state))
+    client.publish("data/numeric/temperatureOuter2_degC",loopCount)
     time.sleep(1)
+    loopCount = loopCount + 1
