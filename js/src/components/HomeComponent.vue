@@ -29,7 +29,7 @@
     <div class="alert alert-success col-12" v-if="logFileName != ''">
 			Log file created: <a :href="logFilePath" download>{{logFileName}}</a>
 		</div>
-    <manual-input-component v-if="view=='manualInput'"></manual-input-component>
+    <manual-input-component v-show="view=='manualInput'"></manual-input-component>
     <latest-values-component v-if="view=='latestValues'" :numericData="numericData"></latest-values-component>
   </div>
 
