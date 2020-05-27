@@ -6,8 +6,7 @@ import csv
 import sys
 
 state = {
-    "logging":False,
-    "trigger":''
+    "logging":False
 }
 numericNames = ['Elapsed time (s)'] #names of all the numeric data 
 numericValues = [0.00] #values of all the numeric data
@@ -36,7 +35,6 @@ def on_message(client, userdata, msg):
         if(message["command"]=='start'):
             print ("should start logging")
             state.update({"logging":True})
-            state.update({"trigger":message["trigger"]})
             #print state
             filename = datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S") + '.csv'
             #filepath = '/var/www/html/logging/'+filename #linux
@@ -104,7 +102,6 @@ while True:
     if(state["logging"]):
         if(startTime==''):
             startTime = time.time()
-        #print ("value has triggered logging")
         #should log to file
         currTime = datetime.datetime.now()
         delta = time.time() - startTime

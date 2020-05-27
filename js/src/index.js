@@ -4,6 +4,7 @@ var $ = require("jquery");
 require('bootstrap');
 
 Vue.component('manual-input-component', require('./components/ManualInputComponent.vue').default );
+Vue.component('home-component', require('./components/HomeComponent.vue').default);
 
 var mychartLabels = [];
 var mychartDatasets = [];

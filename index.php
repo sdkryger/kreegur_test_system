@@ -10,7 +10,8 @@
 	</head>
 	<body>
 		<div id="app" class="container-fluid mt-2">
-    <manual-input-component></manual-input-component>
+    <home-component></home-component>
+    
 			<div class="row justify-content-center mt-2">
 				<div class="col-11">
 					<div class="card">
