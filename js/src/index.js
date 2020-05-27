@@ -17,36 +17,36 @@ window.onload = function(){
     data: {
 		labels: mychartLabels,
 		datasets: mychartDatasets
-	},
+	  },
     options: { 
-		responsive: true,
-		maintainAspectRatio: false,
-		animation: false,
-		scales:{
-			xAxes:[{
-        display:false,
-			  gridLines: {
-				  display: false,
-				  drawBorder: true,
-				  drawOnChartArea: false,
-				}
-			}],
-			yAxes:[{
-			  gridLines: {
-				  display: true,
-				  drawBorder: true,
-				  drawOnChartArea: false,
-				}
-			}]
-		},
-		elements:{
-			point:{
-				radius:0
-			}
-		}
-	}
-});
-console.log("sucess");
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: false,
+      scales:{
+        xAxes:[{
+          display:false,
+          gridLines: {
+            display: false,
+            drawBorder: true,
+            drawOnChartArea: false,
+          }
+        }],
+        yAxes:[{
+          gridLines: {
+            display: true,
+            drawBorder: true,
+            drawOnChartArea: false,
+          }
+        }]
+      },
+      elements:{
+        point:{
+          radius:0
+        }
+      }
+	  }
+  });
+  console.log("sucess");
 };
 
 
