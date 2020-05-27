@@ -52,7 +52,6 @@ console.log("sucess");
 var app = new Vue({
     el: '#app',
     data: {
-		showManual: false,
 		showLatestValues: false,
 		showLogging: false,
 		pubTopic:'data/numeric/temperatureOuter',
@@ -153,13 +152,17 @@ var app = new Vue({
 			this.lastProcessorUpdate = new Date();
 			this.secondsSinceProcessorUpdate = 0;
 			var msg = JSON.parse(message); // message = {"logging":true/false}
-			this.logging = msg.logging;
+      this.logging = msg.logging;
+      if(this.logging){
+        this.logFilePath='';
+        this.logFileName = '';
+      }
 			} else if (topicArray[0] == 'processor' && topicArray[1] == 'loggingStop'){
 			var msg = JSON.parse(message);
 			self.logFileName = msg.filename;
 			self.logFilePath = msg.path;
 			} else if (topicArray[0] == 'processor' && topicArray[1] == 'fileSize'){
-			self.logFileSize = message;
+			self.logFileSize = new TextDecoder("utf-8").decode(message);
 			} else if (topicArray[0] == 'setting'){
 				self.settings = true;
 				var found = false;
@@ -185,12 +188,6 @@ var app = new Vue({
 	console.log("mount success");
     },
     methods: {
-		publishMsg: function(){
-			this.$mqtt.publish(this.pubTopic,this.pubPayload);
-		},
-		toggleShowManual: function(){
-			this.showManual = !this.showManual;
-		},
 		toggleShowLatestValues: function(){
 			this.showLatestValues = !this.showLatestValues;
 		},
@@ -202,23 +199,6 @@ var app = new Vue({
 		},
 		toggleShowSettings: function(){
 			this.showSettings= !this.showSettings;
-		},
-		startLogging: function(){
-			if(this.trigger == ''){
-			this.triggerError = true;
-			}else{
-			this.triggerError = false;
-			this.logFileName = '';
-			var msg = {};
-			msg.command = 'start';
-			msg.trigger = this.trigger;
-			this.$mqtt.publish("processor/logging",JSON.stringify(msg));
-			}
-		},
-		stopLogging: function(){
-			var msg = {};
-			msg.command = 'stop';
-			this.$mqtt.publish("processor/logging",JSON.stringify(msg));
 		},
 		updateSecondsSinceProcessor: function(){
 			this.secondsSinceProcessorUpdate = (new Date().getTime() - this.lastProcessorUpdate.getTime()) / 1000;

@@ -1,5 +1,5 @@
 <template> 
-  <div>
+  <div class="border-bottom border-top mb-2 mt-2">
     <div class="form-group">
 			<label for="pubTopic">Topic</label>
 			<input id="pubTopic" class="form-control" type="text" v-model="pubTopic">
@@ -8,7 +8,7 @@
 			<label for="pubPayload">Payload</label>
 			<input id="pubPayload" class="form-control" type="text" v-model="pubPayload">
 		</div>
-		<button class="btn btn-primary" @click="publishMsg">Publish</button>
+		<button class="btn btn-primary mb-1" @click="publishMsg">Publish</button>
   </div>
 </template>
 
@@ -23,9 +23,7 @@
     },
     methods:{
       publishMsg(){
-        console.log("Trying to publish manual message");
         this.$root.$mqtt.publish(this.pubTopic,this.pubPayload);
-        console.log("Success?");
       }
     }
   }
