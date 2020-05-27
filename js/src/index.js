@@ -3,8 +3,10 @@ import VueMqtt from 'vue-mqtt';
 var $ = require("jquery");
 require('bootstrap');
 
-Vue.component('manual-input-component', require('./components/ManualInputComponent.vue').default );
 Vue.component('home-component', require('./components/HomeComponent.vue').default);
+Vue.component('latest-values-component', require('./components/LatestValuesComponent.vue').default);
+Vue.component('manual-input-component', require('./components/ManualInputComponent.vue').default );
+
 
 var mychartLabels = [];
 var mychartDatasets = [];
@@ -188,18 +190,6 @@ var app = new Vue({
 	console.log("mount success");
     },
     methods: {
-		toggleShowLatestValues: function(){
-			this.showLatestValues = !this.showLatestValues;
-		},
-		toggleLogging: function(){
-			this.showLogging= !this.showLogging;
-		},
-		toggleShowOutputs: function(){
-			this.showOutputs= !this.showOutputs;
-		},
-		toggleShowSettings: function(){
-			this.showSettings= !this.showSettings;
-		},
 		updateSecondsSinceProcessor: function(){
 			this.secondsSinceProcessorUpdate = (new Date().getTime() - this.lastProcessorUpdate.getTime()) / 1000;
 		},

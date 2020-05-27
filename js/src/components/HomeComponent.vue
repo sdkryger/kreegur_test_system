@@ -30,6 +30,7 @@
 			Log file created: <a :href="logFilePath" download>{{logFileName}}</a>
 		</div>
     <manual-input-component v-if="view=='manualInput'"></manual-input-component>
+    <latest-values-component v-if="view=='latestValues'" :numericData="numericData"></latest-values-component>
   </div>
 
 </template>

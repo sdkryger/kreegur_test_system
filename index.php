@@ -22,29 +22,6 @@
 			
 			<div class="row justify-content-center mt-2">
 				<div class="col-11">
-					<div class="card">
-						<div class="card-header" @click="toggleShowLatestValues">
-							<span v-if="showLatestValues" class="mr-3">-</span><span v-if="!showLatestValues" class="mr-3">+</span> Latest Values
-						</div>
-						<div class="card-body" v-if="showLatestValues">
-							<div class="row border rounded mb-1" v-for="num in numericData">
-								<div class="col-12 col-sm-4">
-									{{num.name}}
-								</div>
-								<div class="col-12 col-sm-4">
-									{{num.latestValue}}
-								</div>
-								<div class="col-12 col-sm-4">
-									{{num.lastUpdated }}
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				
-			</div>
-			<div class="row justify-content-center mt-2">
-				<div class="col-11">
 					<div class="card" v-if="control">
 						<div class="card-header" @click="toggleShowOutputs">
 							<span v-if="showOutputs" class="mr-3">-</span><span v-if="!showOutputs" class="mr-3">+</span> Control
