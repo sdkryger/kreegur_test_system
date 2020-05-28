@@ -48,7 +48,6 @@
         this.view = target;
       },
       startLogging: function(){
-        this.logFileName = '';
         var msg = {};
         msg.command = 'start';
         //msg.trigger = this.trigger;

@@ -29,13 +29,11 @@ def on_message(client, userdata, msg):
     global startTime
     #print(msg.topic+" "+str(msg.payload))
     if(msg.topic == 'processor/logging'):
-        #print ("Logging message received: "+str(msg.payload))
         message = json.loads(msg.payload)
-        #print (message["command"])
         if(message["command"]=='start'):
             print ("should start logging")
+            startTime = ''
             state.update({"logging":True})
-            #print state
             filename = datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S") + '.csv'
             #filepath = '/var/www/html/logging/'+filename #linux
             filepath = "C:\\Apache24\\htdocs\\kreegur_test_system\\logging\\"+filename #windows
@@ -43,16 +41,11 @@ def on_message(client, userdata, msg):
             try:
                 #logFile = open(filepath, "w") #linux
                 logFile = open(filepath, "w", newline='') #windows
-                #print ("success opening file")
-                #startTime = datetime.datetime.now()
             except:
                 print ("file open error: " + sys.exc_info()[0])
             wr = csv.writer(logFile, dialect='excel')
-            #print("Opened log file")
-            #print(numericNames)
-            #print(wr)
             wr.writerow(numericNames)
-            #print("name write success")
+            client.publish('processor/loggingStart',json.dumps({"filename":filename,"path":'logging/'+filename}))
             
         else:
             print ("should stop logging")
@@ -65,33 +58,18 @@ def on_message(client, userdata, msg):
         if(topicArray[0] == 'data' and topicArray[1] == 'numeric'):
             val = float(msg.payload)
             name = topicArray[2]
-            #print ("received numeric data with name: " + name + " and value: "+ str(val))
             if(name in numericNames):
-                #print name + " is already in the list"
                 i = numericNames.index(name)
                 numericValues[i] = val
             else:
-                #print "did not find " + name + " in the list, will add"
                 numericNames.append(name)
                 numericValues.append(val)
-            #print (numericNames)
-            #print (numericValues)
-            
-            
-        #else:
-            #print topicArray
-            #print str(msg.payload)
-                
-                
-                
 
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 
-print ("will try to connect")
 client.connect("127.0.0.1", 1883, 60)
-print ("Connected?")
 client.subscribe('#')
 
 client.loop_start()
@@ -108,7 +86,6 @@ while True:
         numericValues[0] = round(delta,1)
         print (numericValues)
         wr.writerow(numericValues)
-        #print ("write success?")
         fileSize = logFile.tell()
         fileSize = round(fileSize / 1024.0,3)
         if fileSize > 1024:
@@ -116,15 +93,13 @@ while True:
             fileSize = str(fileSize) + ' MB'
         else:
             fileSize = str(fileSize) + ' kB'
-            #print ("filesize: "+fileSize)
             client.publish("processor/fileSize",fileSize)
-    #print(time.time())
     client.publish("processor/heartbeat",json.dumps(state))
+
+    #simulate data by publishing loop count
     client.publish("data/numeric/temperatureOuter2_degC",loopCount)
-    #print (time.time())
+
     remainder = time.time()%1
-    #print (remainder)
     toNextSecond = 1 - remainder
-    #print(toNextSecond)
     time.sleep(toNextSecond)
     loopCount = loopCount + 1
