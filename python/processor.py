@@ -4,6 +4,7 @@ import json
 import datetime
 import csv
 import sys
+import math
 
 state = {
     "logging":False
@@ -76,6 +77,7 @@ client.loop_start()
 
 loopCount = 0
 loopStart = time.time()
+x = 0
 while True:
     if(state["logging"]):
         if(startTime==''):
@@ -96,10 +98,12 @@ while True:
             client.publish("processor/fileSize",fileSize)
     client.publish("processor/heartbeat",json.dumps(state))
 
-    #simulate data by publishing loop count
-    client.publish("data/numeric/temperatureOuter2_degC",loopCount)
+    #simulate data
+    temp = round((math.cos(x) * 8 + 12),1)
+    client.publish("data/numeric/temperatureOuter2_degC",temp)
 
     remainder = time.time()%1
     toNextSecond = 1 - remainder
     time.sleep(toNextSecond)
-    loopCount = loopCount + 1
+    x += 0.1
+    print("temp:"+str(temp)+", x:"+str(x))
