@@ -3,6 +3,8 @@ import VueMqtt from 'vue-mqtt';
 var $ = require("jquery");
 require('bootstrap');
 
+Vue.component('analogue-input-component', require('./components/AnalogueInputComponent.vue').default);
+Vue.component('analogue-input-settings-component', require('./components/AnalogueInputSettingsComponent.vue').default);
 Vue.component('home-component', require('./components/HomeComponent.vue').default);
 Vue.component('latest-values-component', require('./components/LatestValuesComponent.vue').default);
 Vue.component('manual-input-component', require('./components/ManualInputComponent.vue').default );
@@ -70,6 +72,7 @@ var app = new Vue({
       'rgb(201, 203, 207)'
     ],
     graphCounter:0,
+    modulesAnalogueInput:[]
   },
   mounted(){
 		console.log("server ip address is: "+ipAddress);
@@ -125,7 +128,25 @@ var app = new Vue({
 			  self.logFilePath = msg.path;
 			} else if (topicArray[0] == 'processor' && topicArray[1] == 'fileSize'){
 			  self.logFileSize = new TextDecoder("utf-8").decode(message);
-			}
+      } else if (topicArray[0]=='inputAnalogue'){
+        /*
+          {"id":0,"broker":"localhost","channels":[{"name":"torque_Nm"}]}
+        */
+        console.log("got an analogue input module message");
+        var found = -1;
+        var data = JSON.parse(message);
+        for(var i=0;i<this.modulesAnalogueInput.length;i++){
+          if(data.id == this.modulesAnalogueInput[i].id)
+            found = i;
+        }
+        console.log("found: "+found);
+        if(found != -1){
+          this.modulesAnalogueInput[found] = data;
+        }else{
+          this.modulesAnalogueInput.push(data);
+        }
+      }
+      
 		
     }.bind(this));
 	  setInterval(this.updateSecondsSinceProcessor,1000);

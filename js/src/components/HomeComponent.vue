@@ -16,6 +16,9 @@
           <li class="nav-item" @click="nav('manualInput')">
             <a class="nav-link" href="#">Manual Input</a>
           </li>
+          <li class="nav-item" @click="nav('analogueInput')" v-if="modulesAnalogueInput.length > 0">
+            <a class="nav-link" href="#">Analogue Input</a>
+          </li>
         </ul>
       </div>
     </nav>
@@ -30,6 +33,7 @@
 			Log file created: <a :href="logFilePath" download>{{logFileName}}</a>
 		</div>
     <manual-input-component v-show="view=='manualInput'"></manual-input-component>
+    <analogue-input-component v-if="view=='analogueInput'" :modules="modulesAnalogueInput"></analogue-input-component>
     <latest-values-component v-if="view=='latestValues'" :numericData="numericData"></latest-values-component>
   </div>
 
@@ -60,6 +64,7 @@
       },
 		
     },
-    props:['logging','logFileSize','logFileName','logFilePath','secondsSinceProcessorUpdate','numericData']
+    props:['logging','logFileSize','logFileName','logFilePath','secondsSinceProcessorUpdate','numericData',
+      'modulesAnalogueInput']
   }
 </script>

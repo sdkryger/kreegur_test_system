@@ -17,8 +17,11 @@
     data(){
       return {
         message:'hi',
-        pubTopic:'data/numeric/pressure_kPa',
-        pubPayload:'4.56'
+        pubTopic:'inputAnalogue',//'data/numeric/pressure_kPa',
+        pubPayload:`{"id":0,"broker":"localhost","channels":[
+          {"name":"torque_Nm","enable":true,"rawLow":0,"rawHigh":1,"engLow":0,"engHigh":1},
+          {"name":"speed_rpm","enable":true,"rawLow":0,"rawHigh":1,"engLow":0,"engHigh":1}
+          ]}` //'4.56'
       }
     },
     methods:{

@@ -106,4 +106,4 @@ while True:
     toNextSecond = 1 - remainder
     time.sleep(toNextSecond)
     x += 0.1
-    print("temp:"+str(temp)+", x:"+str(x))
+    #print("temp:"+str(temp)+", x:"+str(x))

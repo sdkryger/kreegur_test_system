@@ -12,7 +12,7 @@
     
       <home-component :logging="logging" :log-file-size="logFileSize" :log-file-path="logFilePath"
         :seconds-since-processor-update="secondsSinceProcessorUpdate" :log-file-name="logFileName"
-        :numeric-data="numericData"></home-component>
+        :numeric-data="numericData" :modules-analogue-input="modulesAnalogueInput"></home-component>
 			<div class="row justify-content-center">
 				<div class="col-11">
 					<canvas id="myChart2" width="400" height="400"></canvas>
